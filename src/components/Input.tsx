@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InputProp } from "../types";
+import axios from "axios";
 
 export default function Input({ setList, list }: InputProp) {
   const [input, setInput] = useState({ name: "", number: "" });
 
+  useEffect(()=>{
+    const fetchList= async () => {
+        let peopleList = await axios.get('http://localhost:3001/persons');
+        console.log({peopleList: peopleList});
+        setList(peopleList.data);
+    }
+    fetchList();
+  },[]);
   const handleForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isExisting = list.some(item => item.name === input.name);
@@ -12,7 +21,7 @@ export default function Input({ setList, list }: InputProp) {
       resetForm();
       return;
     }
-    setList(prevList => [...prevList, { name: input.name, Number: input.number }]);
+    setList(prevList => [...prevList, { name: input.name, number: input.number }]);
     resetForm();
   };
 

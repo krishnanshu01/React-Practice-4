@@ -5,5 +5,5 @@ export interface InputProp {
 
 export interface listArray {
     name: string;
-    Number: string;
+    number: string;
 }

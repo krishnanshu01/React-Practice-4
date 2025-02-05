@@ -13,7 +13,7 @@ export default function Input({ setList, list }: InputProp) {
     }
     fetchList();
   },[]);
-  const handleForm = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isExisting = list.some(item => item.name === input.name);
     if (isExisting) {
@@ -21,7 +21,17 @@ export default function Input({ setList, list }: InputProp) {
       resetForm();
       return;
     }
-    setList(prevList => [...prevList, { name: input.name, number: input.number }]);
+    const newPerson = {
+        name: input.name,
+        number: input.number
+    }
+    try{
+        let client = await axios.post('http://localhost:3001/persons', newPerson);
+        console.log(newPerson);
+        setList(prev => [...prev , client.data]);
+    }catch(e: any){
+        throw new Error("unhandled error" + e.message);
+    }
     resetForm();
   };
 
